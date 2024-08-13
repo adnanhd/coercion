@@ -139,7 +139,7 @@ def _on_missing(defaults: dict, schema_val: type) -> Any:
 
 
 def _on_mismatch(
-    defaults: dict, schema_val: Any, record_val: Any
+    defaults: dict, schema_val: type, record_val: Any
 ) -> Any:
     if isinstance(schema_val, list) and isinstance(
         record_val, str
