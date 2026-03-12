@@ -11,20 +11,13 @@ GITID = "kremrik"
 
 def get_dependencies() -> List[str]:
     depfile = "requirements.txt"
-    reqs = [
-        dep.strip() for dep in open(depfile).readlines()
-    ]
+    reqs = [dep.strip() for dep in open(depfile).readlines()]
     return reqs
 
 
 def get_package_name() -> str:
     packagefile = ".package-name"
-    package = (
-        open(packagefile, "rt")
-        .read()
-        .strip()
-        .replace("-", "_")
-    )
+    package = open(packagefile, "rt").read().strip().replace("-", "_")
     return package
 
 
@@ -52,9 +45,7 @@ setup(
     name=get_package_name(),
     version=get_version(),
     author=AUTHOR,
-    url="https://github.com/{}/{}".format(
-        GITID, get_package_name()
-    ),
+    url="https://github.com/{}/{}".format(GITID, get_package_name()),
     description=DESCRIPTION,
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",

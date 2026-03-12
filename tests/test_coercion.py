@@ -130,23 +130,9 @@ class test_coerce(unittest.TestCase):
         self.assertEqual(gold, output)
 
     def test_extra_nested_lists(self):
-        schema = {
-            "foo": {"bar": [{"baz": [{"qux": float}]}]}
-        }
-        record = {
-            "foo": {
-                "bar": [
-                    {"baz": [{"qux": 1}, {"dur": "hi"}]}
-                ]
-            }
-        }
-        gold = {
-            "foo": {
-                "bar": [
-                    {"baz": [{"qux": 1}, {"qux": None}]}
-                ]
-            }
-        }
+        schema = {"foo": {"bar": [{"baz": [{"qux": float}]}]}}
+        record = {"foo": {"bar": [{"baz": [{"qux": 1}, {"dur": "hi"}]}]}}
+        gold = {"foo": {"bar": [{"baz": [{"qux": 1}, {"qux": None}]}]}}
         output = coerce(schema, record)
         self.assertEqual(gold, output)
 
@@ -175,9 +161,7 @@ class test_coerce(unittest.TestCase):
         record = {"foo": [{"bar": 1}]}
         coerce(schema, record)
         self.assertEqual(record, {"foo": [{"bar": 1}]})
-        self.assertEqual(
-            schema, {"foo": [{"bar": int, "baz": int}]}
-        )
+        self.assertEqual(schema, {"foo": [{"bar": int, "baz": int}]})
 
 
 if __name__ == "__main__":

@@ -70,9 +70,7 @@ def coerce(
 
 # ---------------------------------------------------------
 def deep_diff(d1: dict, d2: dict) -> dict:
-    return diff_(
-        d1=d1, d2=d2, list_strategy=_diff_list_strategy
-    )
+    return diff_(d1=d1, d2=d2, list_strategy=_diff_list_strategy)
 
 
 def _diff_list_strategy(
@@ -95,17 +93,13 @@ def _diff_list_strategy(
 
 # ---------------------------------------------------------
 def deep_cut(d1: dict, d2: dict) -> dict:
-    return cut_(
-        d1=d1, d2=d2, list_strategy=_cut_list_strategy
-    )
+    return cut_(d1=d1, d2=d2, list_strategy=_cut_list_strategy)
 
 
 # TODO: rename `schema_val` to something like "original"
 # not sure why removing the deepcopy's from map_ops.core
 # causes problems here, but it does... bug?
-def _cut_list_strategy(
-    record_val: List[Any], schema_val: List[Any]
-) -> List[Any]:
+def _cut_list_strategy(record_val: List[Any], schema_val: List[Any]) -> List[Any]:
     if isinstance(schema_val, set):
         schema_val = deepcopy(schema_val)
         inner = schema_val.pop()
@@ -127,9 +121,7 @@ def deep_put(defaults: dict, d1: dict, d2: dict) -> dict:
         d2=d2,
         on_missing=partial(_on_missing, defaults),
         on_mismatch=partial(_on_mismatch, defaults),
-        list_strategy=partial(
-            _put_list_strategy, defaults
-        ),
+        list_strategy=partial(_put_list_strategy, defaults),
     )
 
 
@@ -138,29 +130,19 @@ def _on_missing(defaults: dict, schema_val: type) -> Any:
     return _schema_to_defaults(_defaults, schema_val)
 
 
-def _on_mismatch(
-    defaults: dict, schema_val: type, record_val: Any
-) -> Any:
-    if isinstance(schema_val, list) and isinstance(
-        record_val, str
-    ):
+def _on_mismatch(defaults: dict, schema_val: type, record_val: Any) -> Any:
+    if isinstance(schema_val, list) and isinstance(record_val, str):
         try:
             record_val = loads(record_val)
-            return _put_list_strategy(
-                defaults, schema_val, record_val
-            )
+            return _put_list_strategy(defaults, schema_val, record_val)
         except Exception:
             # catch below
             pass
 
-    if isinstance(schema_val, dict) and isinstance(
-        record_val, str
-    ):
+    if isinstance(schema_val, dict) and isinstance(record_val, str):
         try:
             record_val = loads(record_val)
-            return deep_put(
-                defaults, schema_val, record_val
-            )
+            return deep_put(defaults, schema_val, record_val)
         except Exception:
             # catch below
             pass
@@ -196,9 +178,7 @@ def _unwind_exception(e_args: tuple) -> str:
         return "{}: {}".format(e_args[0], e_args[1])
     if len(e_args[1]) <= 1:
         return "{}: {}".format(e_args[0], e_args[1][0])
-    return (
-        e_args[0] + " -> " + _unwind_exception(e_args[1])
-    )
+    return e_args[0] + " -> " + _unwind_exception(e_args[1])
 
 
 def _schema_to_defaults(defaults: dict, obj: Any) -> Any:
@@ -208,14 +188,6 @@ def _schema_to_defaults(defaults: dict, obj: Any) -> Any:
     fnc = partial(_schema_to_defaults, defaults)
 
     if type(obj) in (set, list, tuple):
-        return (
-            type(obj)(map(lambda x: fnc(x), obj))
-            if isinstance(obj, dict)
-            else []
-        )
+        return type(obj)(map(lambda x: fnc(x), obj)) if isinstance(obj, dict) else []
 
-    return dict(
-        zip(
-            obj.keys(), map(lambda x: fnc(x), obj.values())
-        )
-    )
+    return dict(zip(obj.keys(), map(lambda x: fnc(x), obj.values())))
