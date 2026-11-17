@@ -1,22 +1,27 @@
 ![](images/coercion.png)
 
 # coercion
-![Python package](https://github.com/kremrik/coercion/workflows/Python%20package/badge.svg)
 ![coverage](images/coverage.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+A fork of [kremrik/coercion](https://github.com/kremrik/coercion), version
+0.1.1; the code is upstream's but for the annotation `schema_val: type` in
+`_on_mismatch` and line breaks.
+
 ### Installation
-Currently either installable from source, or by pip installing from github:
+Installable from source, or by pip installing from github:
 ```
-python -m pip install git+https://github.com/kremrik/coercion.git
+python -m pip install git+https://github.com/adnanhd/coercion.git
 ```
+The one dependency, `map_ops`, comes from
+`git+https://github.com/kremrik/map-ops@master` (`requirements.txt`).
 
 ### What is it?
 A dead-simple, dictionary-based, schema framework for shaping and _coercing_
 arbitrarily complex data
 
 ### What is it _not_?
-A schema validatator. `coercion` makes every attempt to fill in the blanks and
+A schema validator. `coercion` makes every attempt to fill in the blanks and
 cast your data to the appropriate types, but employs a "fail fast" approach to
 exceptions and does not provide reporting.
 
@@ -101,3 +106,21 @@ coerce(schema, record)
 ...
 ValueError: foo -> bar -> baz: could not convert string to float: 'hi'
 ```
+
+### Development
+`make check` runs the unit tests (`pytest`), the doctests of
+`coercion/coercion.py`, coverage (writing `images/coverage.svg` with
+`coverage-badge`), mypy, black and flake8, the last two with a 59-character
+line limit that 12 lines of `coercion/coercion.py` exceed. The tools are in
+`dev_requirements.txt`. `.githooks/pre-commit` runs `make check` and then
+`git add .`; it is active only with `git config core.hooksPath .githooks`.
+`make sphinx` expects a `sphinx/` directory, which the repository does not
+have. `.github/workflows/python-package.yml` runs flake8, mypy and pytest on
+Python 3.5 to 3.8.
+
+### On this machine
+The checkout is `~/src/personal/coercion`. Neither `coercion` nor `map_ops`
+is installed, so the tests do not run here.
+
+### License
+MIT, see `LICENSE`.
